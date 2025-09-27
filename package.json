@@ -1,0 +1,37 @@
+{
+  "name": "fintrack-platform",
+  "version": "1.0.0",
+  "description": "Personal Finance & Investment Management Platform with ML-powered analytics",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:ml-service\"",
+    "dev:frontend": "cd frontend && npm start",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:ml-service": "cd ml-service && uvicorn main:app --reload --port 8001",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "k8s:deploy": "kubectl apply -f k8s/",
+    "k8s:delete": "kubectl delete -f k8s/"
+  },
+  "keywords": [
+    "finance",
+    "investment",
+    "budgeting",
+    "machine-learning",
+    "microservices",
+    "react",
+    "nodejs",
+    "postgresql",
+    "aws",
+    "kubernetes"
+  ],
+  "author": "Saurabh Parthe",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

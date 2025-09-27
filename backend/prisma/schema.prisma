@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expenses     Expense[]
+  investments  Investment[]
+  budgets      Budget[]
+  categories   Category[]
+
+  @@map("users")
+}
+
+model Category {
+  id          String @id @default(cuid())
+  name        String
+  description String?
+  color       String  @default("#1976d2")
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expenses Expense[]
+
+  @@map("categories")
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  description String
+  amount      Float
+  category    String
+  type        ExpenseType @default(EXPENSE)
+  date        DateTime
+  userId      String
+  categoryId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryRef Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@map("expenses")
+}
+
+model Investment {
+  id            String   @id @default(cuid())
+  symbol        String
+  name          String
+  type          InvestmentType
+  quantity      Float
+  purchasePrice Float
+  currentPrice  Float?
+  purchaseDate  DateTime
+  userId        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("investments")
+}
+
+model Budget {
+  id          String      @id @default(cuid())
+  category    String
+  amount      Float
+  spent       Float       @default(0)
+  period      BudgetPeriod @default(MONTHLY)
+  startDate   DateTime
+  endDate     DateTime
+  userId      String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("budgets")
+}
+
+model Transaction {
+  id          String          @id @default(cuid())
+  description String
+  amount      Float
+  type        TransactionType
+  category    String
+  date        DateTime
+  userId      String
+  isRecurring Boolean         @default(false)
+  recurringId String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
+
+enum ExpenseType {
+  EXPENSE
+  INCOME
+}
+
+enum InvestmentType {
+  STOCK
+  BOND
+  ETF
+  CRYPTO
+  MUTUAL_FUND
+  COMMODITY
+  REAL_ESTATE
+}
+
+enum BudgetPeriod {
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum TransactionType {
+  DEBIT
+  CREDIT
+  TRANSFER
+}

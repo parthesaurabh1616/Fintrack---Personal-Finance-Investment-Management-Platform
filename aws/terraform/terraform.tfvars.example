@@ -1,0 +1,19 @@
+# AWS Configuration
+aws_region     = "us-east-1"
+aws_account_id = "123456789012"
+
+# Database Configuration
+db_password = "your-secure-database-password"
+
+# Redis Configuration
+redis_auth_token = "your-redis-auth-token"
+
+# JWT Configuration
+jwt_secret = "your-super-secure-jwt-secret-key"
+
+# S3 Configuration
+s3_bucket_name = "fintrack-storage-bucket"
+
+# Environment
+environment  = "production"
+project_name = "fintrack"
